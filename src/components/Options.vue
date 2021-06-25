@@ -28,6 +28,13 @@
                @change="$store.commit('setSearchFreeOnly', $event.target.checked)">
         <label class="form-check-label" for="searchFreeOnly"> Search For Free Only? </label>
       </div>
+
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" value="true" id="reschedule"
+               :checked="$store.getters.getReschedule"
+               @change="$store.commit('setReschedule', $event.target.checked)">
+        <label class="form-check-label" for="reschedule"> Reschedule Existing? </label>
+      </div>
     </div>
 
     <div class="col-md-6">
@@ -59,7 +66,7 @@ export default {
   name: "Options",
   data() {
     return {
-      vaccines: ['COVISHIELD', 'COVAXIN'],
+      vaccines: ['COVISHIELD', 'COVAXIN', 'SPUTNIK'],
     }
   },
   mounted() {

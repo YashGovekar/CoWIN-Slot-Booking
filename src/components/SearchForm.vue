@@ -1,24 +1,51 @@
 <template>
   <div class="w-100">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <div class="m-2 form-check">
+            <input type="checkbox" class="form-check-input" value="true" id="pinCodeOnly"
+                   :checked="$store.getters.getPinCodeOnly"
+                   @change="$store.commit('setPinCodeOnly', $event.target.checked)">
+            <label class="form-check-label" for="pinCodeOnly"> Search By PinCodes only? </label>
+          </div>
+          <input class="form-control"
+                 :value="$store.getters.getPinCode"
+                 @change="$store.commit('setPinCode', $event.target.value)"
+                 placeholder="Enter Pin code" />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="m-2 form-check">
+          <label class="form-check-label" for="dose"> Which Dose? </label>
+          <select class="form-select" id="dose" @change="$store.commit('setDose', $event.target.value)">
+            <option value="1">Dose 1</option>
+            <option value="2">Dose 2</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
     <div class="form-group">
       <input class="form-control"
-             :value="$store.getters.getPinCode"
-             @change="$store.commit('setPinCode', $event.target.value)"
-             placeholder="Enter Pin code" />
+             :value="$store.getters.getCenterName"
+             @change="$store.commit('setCenterName', $event.target.value)"
+             placeholder="Enter Center Name" />
     </div>
 
     <div class="m-2 form-check">
-      <input type="checkbox" class="form-check-input" value="true" id="pinCodeOnly"
-             :checked="$store.getters.getPinCodeOnly"
-             @change="$store.commit('setPinCodeOnly', $event.target.checked)">
-      <label class="form-check-label" for="pinCodeOnly"> Search By PinCodes only? </label>
+      <input type="checkbox" class="form-check-input" value="true" id="center-only"
+             :checked="$store.getters.getCenterNameOnly"
+             @change="$store.commit('setCenterNameOnly', $event.target.checked)">
+      <label class="form-check-label" for="center-only"> Search By center name only? </label>
     </div>
 
-    <h3 class="text-center">OR</h3>
-    <h5>Search By District</h5>
+    <hr />
 
     <div class="form-group">
-      <label>State</label>
+      <label>State <span class="text-danger">*</span> </label>
       <select @change="getDistricts($event)" class="form-select">
         <option selected>Select a state</option>
         <option v-for="state in states" :value="state.state_id" :key="state.state_id">
@@ -27,7 +54,7 @@
       </select>
     </div>
     <div class="mt-2">
-      <label class="text-left">District</label>
+      <label class="text-left">District <span class="text-danger">*</span></label>
       <select @change="setDistrict($event)" :model="district" class="form-select">
         <option selected>Select a District</option>
         <option v-for="district in districts" :value="district.district_id" :key="district.district_id">
@@ -132,6 +159,7 @@ export default {
                       }
                     }
                   }
+
                   if (! pinCodeOnly) {
                     centers.push(center);
                   }
@@ -174,6 +202,12 @@ export default {
         }
         let center = centers[i];
 
+        let centerOnly = this.$store.getters.getCenterNameOnly;
+
+        if (centerOnly && center.name !== this.$store.getters.getCenterName) {
+          continue;
+        }
+
         for (let j = 0; j < center.sessions.length; j++) {
           if (this.processed) {
             break;
@@ -211,28 +245,32 @@ export default {
 
           let beneficiaries = [];
 
+          let dose = this.$store.getters.getDose;
+
           allBeneficiaries.map(ben => {
             let benAge = currYear - ben.birth_year;
-            if (ben.dose1_date === '' && (benAge >= minAge && benAge < (minAge === 18 ? 45 : 75))) {
+            if (ben['dose' + dose + '_date'] === '' && (benAge >= minAge && benAge < (minAge === 18 ? 45 : 75))) {
               beneficiaries.push(ben.beneficiary_reference_id);
             }
           })
 
-          if (session.available_capacity_dose1 >= beneficiaries.length && session.min_age_limit === minAge) {
+          if (session['available_capacity_dose' + dose] >= beneficiaries.length && session.min_age_limit === minAge) {
 
             this.appointment.session_id = session.session_id;
 
             this.appointment.slot = session['slots'][0]
 
             if (allBeneficiaries.length) {
-              for (let i = 0; i < allBeneficiaries.length; i++) {
-                let beneficiary = allBeneficiaries[i];
-                if (beneficiary.appointments.length > 0 && beneficiary.dose1_date === '') {
-                  setTimeout(async () => {
-                    await this.rescheduleAppointment(beneficiary);
-                    let index = beneficiaries.findIndex(el => el === beneficiary.beneficiary_reference_id)
-                    beneficiaries.splice(index, 1);
-                  }, 500);
+              if (this.$store.getters.getReschedule) {
+                for (let i = 0; i < allBeneficiaries.length; i++) {
+                  let beneficiary = allBeneficiaries[i];
+                  if (beneficiary.appointments.length > 0 && beneficiary['dose' + dose + '_date'] === '') {
+                    setTimeout(async () => {
+                      await this.rescheduleAppointment(beneficiary);
+                      let index = beneficiaries.findIndex(el => el === beneficiary.beneficiary_reference_id)
+                      beneficiaries.splice(index, 1);
+                    }, 500);
+                  }
                 }
               }
 
@@ -308,6 +346,8 @@ export default {
     this.tomorrowDate = (Number(formatted_date.slice(8, 10)) + 1) + '-'
         + formatted_date.slice(5, 7) + '-'
         + formatted_date.slice(0, 4);
+
+    document.getElementById('dose').value = this.appointment.dose = this.$store.getters.getDose;
   }
 }
 </script>

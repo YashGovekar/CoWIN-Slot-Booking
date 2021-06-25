@@ -3,8 +3,9 @@
     <div class="container pb-5">
       <small class="pt-4" style="float: left">Time Elapsed : {{ $store.getters.getTimeElapsed }}</small>
       <h2 class="text-center">
-        Welcome to {{ this.appName }}
+        Welcome to CoWIN Slot Booking
       </h2>
+      <small class="pt-4" style="float: right">Selected : {{ $store.getters.district }}</small>
 
       <hr />
 

@@ -1,15 +1,25 @@
 # CoWIN-Slot-Booking
 The Fastest automatic slot booking for CoWIN Vaccination.
 
-## Installation
+# Prerequisites
 
-* Firstly, download [CoWIN OTP Retriever](https://vaccine.vcrewsys.net/storage/CoWIN-OTP-Receiver.apk)
+* <a href="https://nodejs.org/en/download/" target="_blank">Node JS</a>
+* Android Device
+
+# Installation
+
+## Installation Step 1 : Mobile App Installation
+  
+* Firstly, download the [CoWIN OTP Retriever](https://vaccine.vcrewsys.net/storage/CoWIN-OTP-Receiver.apk)
 * Install it in an Android Mobile Device which has the number you're
   booking for.
 * Allow access to messages and High Power Usage and
   toggle `Start Listening`(<b>Do Not Close the Application while
   Booking</b>)
-* Now on your system, clone this repository and run `npm install` 
+  
+## Installation Step 2 : Web App Installation
+
+* On your system, clone this repository and run `npm install` 
 * Then run `npm run serve`
 * Visit `http://localhost:8080/` and select options as
   per your convenience.
@@ -19,8 +29,10 @@ The Fastest automatic slot booking for CoWIN Vaccination.
 
 * Dark Theme implemented by default.
 * This Application will book for all the beneficiaries registered on the phone number.
-* This Application will also reschedule the selected age category beneficiary registered on the phne number
-  if already booked at other center.
+* Added Option for Rescheduling
+* Added Option for Dose
+* You will need to refresh the page once all the appointments get booked inorder to book for
+another phone number.
   
 ## Purpose
 

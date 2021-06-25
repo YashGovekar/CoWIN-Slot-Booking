@@ -20,6 +20,7 @@ const store = new Vuex.Store({
         searchTomorrow: false,
         searchFreeOnly: false,
         beneficiaries: [],
+        dose: 1,
         district: 0,
         pinCode: '',
         centers: [],
@@ -28,6 +29,9 @@ const store = new Vuex.Store({
         timeElapsed: 0,
         vaccine: '0',
         pinCodeOnly: false,
+        centerName: '',
+        centerOnly: false,
+        reschedule: true,
     },
     mutations: {
         setToken (state, token) {
@@ -45,6 +49,15 @@ const store = new Vuex.Store({
         },
         setCenters(state, value) {
             state.centers = value;
+        },
+        setDose(state, value) {
+            state.dose = value;
+        },
+        setCenterName(state, value) {
+            state.centerName = value;
+        },
+        setCenterNameOnly(state, value) {
+            state.centerOnly = value;
         },
         setPhone(state, value) {
             state.phone = value;
@@ -82,6 +95,9 @@ const store = new Vuex.Store({
         incrementTimeElapsed(state) {
             state.timeElapsed += 1;
         },
+        setReschedule(state, value) {
+            state.reschedule = value;
+        },
     },
     getters: {
         getPhone: state => state.phone,
@@ -100,6 +116,10 @@ const store = new Vuex.Store({
         getPinCodeOnly: state => state.pinCodeOnly,
         getVaccine: state => state.vaccine,
         getSearchFreeOnly: state => state.searchFreeOnly,
+        getCenterName: state => state.centerName,
+        getCenterNameOnly: state => state.centerOnly,
+        getDose: state => state.dose,
+        getReschedule: state => state.reschedule,
     }
 })
 
