@@ -12,6 +12,7 @@ const vuexLocalStorage = new VuexPersist({
 const store = new Vuex.Store({
     plugins: [vuexLocalStorage.plugin],
     state: {
+        manualOTP: false,
         phone: '',
         token: '',
         loggedIn: false,
@@ -22,6 +23,7 @@ const store = new Vuex.Store({
         beneficiaries: [],
         dose: 1,
         district: 0,
+        stateId: 0,
         pinCode: '',
         centers: [],
         minAge: 0,
@@ -34,6 +36,9 @@ const store = new Vuex.Store({
         reschedule: true,
     },
     mutations: {
+        toggleManualOTP(state) {
+            state.manualOTP = !state.manualOTP
+        },
         setToken (state, token) {
             state.token = token;
             state.loggedIn = true;
@@ -46,6 +51,9 @@ const store = new Vuex.Store({
         },
         setDistrict(state, value) {
             state.district = value;
+        },
+        setState(state, value) {
+            state.stateId = value;
         },
         setCenters(state, value) {
             state.centers = value;
@@ -100,11 +108,13 @@ const store = new Vuex.Store({
         },
     },
     getters: {
+        getOTPManual: state => state.manualOTP,
         getPhone: state => state.phone,
         getToken: state => state.token ? state.token : null,
         getLoginStatus: state => state.loggedIn,
         getBeneficiaries: state => state.beneficiaries,
         getDistrict: state => state.district,
+        getStateId: state => state.stateId,
         getCenters: state => state.centers,
         getMinAge: state => state.minAge,
         getConfirmed: state => state.confirmed,

@@ -1,11 +1,19 @@
 <template>
   <div id="app">
     <div class="container pb-5">
-      <small class="pt-4" style="float: left">Time Elapsed : {{ $store.getters.getTimeElapsed }}</small>
-      <h2 class="text-center">
-        Welcome to CoWIN Slot Booking
-      </h2>
-      <small class="pt-4" style="float: right">Selected : {{ $store.getters.district }}</small>
+      <b-row>
+        <b-col cols="3">
+          <small class="pt-4" style="float: left">Time Elapsed : {{ $store.getters.getTimeElapsed }}</small>
+        </b-col>
+        <b-col cols="6">
+          <h2 class="text-center">
+            Welcome to CoWIN Slot Booking
+          </h2>
+        </b-col>
+        <b-col cols="3">
+          <small class="pt-4" style="float: right">Developed By <u><b>Yash Govekar</b></u></small>
+        </b-col>
+      </b-row>
 
       <hr />
 
@@ -83,7 +91,7 @@ export default {
       }, 500)
     }
     this.$store.commit('setConfirmed', false);
-  }
+  },
 }
 </script>
 

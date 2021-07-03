@@ -6,11 +6,30 @@
            :value="$store.getters.getPhone"
            @change="$store.commit('setPhone', $event.target.value)"
     />
-    <b-button variant="primary" @click="sendOTP" class="mt-2">
+
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" value="true" id="manualOTP"
+             :checked="$store.getters.getOTPManual"
+             @change="$store.commit('toggleManualOTP', $event.target.checked)">
+      <label class="form-check-label" for="manualOTP">
+        Enter OTP Manually? (For automatic validating, you will need to use the app in assets directory )
+      </label>
+    </div>
+
+    <b-button variant="primary" @click="sendOTP" class="mt-2" :disabled="processing">
       <span v-if="processing">Validating OTP...</span>
       <span v-else>Send OTP</span>
     </b-button>
     <hr />
+
+    <div v-if="$store.getters.getOTPManual && processing" class="form-group">
+      <input placeholder="Enter OTP" class="form-control" v-model="otp" type="number">
+      <b-button variant="primary" @click="confirmOTP(otp)" class="mt-2">
+        Validate OTP
+      </b-button>
+      <hr />
+    </div>
+
   </b-form>
 </template>
 
@@ -28,6 +47,7 @@ export default {
       token: '',
       seconds: 0,
       processing: false,
+      otp: '',
       errors: 0,
     }
   },
@@ -44,9 +64,11 @@ export default {
         })
             .then(res => {
               this.txnID = res.data.txnId;
-              setTimeout(() => {
-                this.getKvDbData()
-              }, 10000)
+              if (! this.$store.getters.getOTPManual) {
+                setTimeout(() => {
+                  this.getKvDbData()
+                }, 10000)
+              }
             })
             .catch(error => {
               if (! this.errors > 5) {
@@ -86,11 +108,17 @@ export default {
 
         this.processing = false;
 
+        alert('Logged in!');
+
       }).catch(error => {
         if (error.response) {
-          setTimeout(() => {
-            this.getKvDbData();
-          }, 5000)
+          if (! this.$store.getters.getOTPManual) {
+            setTimeout(() => {
+              this.getKvDbData();
+            }, 5000)
+          } else {
+            alert('Sorry the OTP you entered is incorrect!');
+          }
           console.log(error.response.data);
         }
       })
@@ -118,8 +146,10 @@ export default {
         this.$store.commit('setTimeElapsed', 0);
         this.$store.commit('setLoggedIn', false);
         this.$store.commit('setToken', null);
-        if (this.$store.getters.getPhone !== '') {
+        if (this.$store.getters.getPhone !== '' && ! this.$store.getters.getOTPManual) {
           this.sendOTP();
+        } else {
+          alert('OTP Expired');
         }
       } else {
         if (this.loggedIn) {

@@ -46,7 +46,7 @@
 
     <div class="form-group">
       <label>State <span class="text-danger">*</span> </label>
-      <select @change="getDistricts($event)" class="form-select">
+      <select @change="getDistricts($event.target.value)" class="form-select" id="state">
         <option selected>Select a state</option>
         <option v-for="state in states" :value="state.state_id" :key="state.state_id">
           {{ state.state_name }}
@@ -55,7 +55,7 @@
     </div>
     <div class="mt-2">
       <label class="text-left">District <span class="text-danger">*</span></label>
-      <select @change="setDistrict($event)" :model="district" class="form-select">
+      <select @change="setDistrict($event.target.value)" :model="district" class="form-select" id="district">
         <option selected>Select a District</option>
         <option v-for="district in districts" :value="district.district_id" :key="district.district_id">
           {{ district.district_name }}
@@ -99,11 +99,23 @@ export default {
     getStates() {
       this.axios.get(this.apiURL + '/admin/location/states').then(res => {
         this.states = res.data.states;
+        if (this.$store.getters.getStateId !== 0) {
+          this.getDistricts(this.$store.getters.getStateId)
+          setTimeout(() => {
+            document.getElementById('state').value = this.$store.getters.getStateId;
+          }, 500)
+        }
       })
     },
-    getDistricts(event) {
-      this.axios.get(this.apiURL + '/admin/location/districts/' + event.target.value).then(res => {
+    getDistricts(state) {
+      this.$store.commit('setState', state);
+      this.axios.get(this.apiURL + '/admin/location/districts/' + state).then(res => {
         this.districts = res.data.districts;
+        if (this.$store.getters.getDistrict !== 0) {
+          setTimeout(() => {
+            document.getElementById('district').value = this.$store.getters.getDistrict;
+          }, 500)
+        }
       })
     },
     async getCenters() {
@@ -170,8 +182,8 @@ export default {
             })
       }
     },
-    setDistrict(event) {
-      this.$store.commit('setDistrict', event.target.value)
+    setDistrict(district) {
+      this.$store.commit('setDistrict', district)
       this.getCenters();
     },
     toggleSearching() {
@@ -204,7 +216,7 @@ export default {
 
         let centerOnly = this.$store.getters.getCenterNameOnly;
 
-        if (centerOnly && center.name !== this.$store.getters.getCenterName) {
+        if (centerOnly && ! (center.name).toLowerCase().includes((this.$store.getters.getCenterName).toLowerCase())) {
           continue;
         }
 
