@@ -87,14 +87,12 @@ export default {
         .then(res => {
           let msgData = res.data;
           let OTPString = msgData.substr(37, 6);
-          let otp = this.sha256(OTPString)
-
-          this.confirmOTP(otp)
+          this.confirmOTP(OTPString)
         })
     },
     confirmOTP(otp) {
       this.axios.post(this.apiURL + '/auth/validateMobileOtp', {
-        "otp": otp,
+        "otp": this.sha256(otp),
         "txnId": this.txnID
       }).then(res => {
         let token = res.data.token;
