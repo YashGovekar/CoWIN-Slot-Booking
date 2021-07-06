@@ -8,6 +8,8 @@ The Fastest automatic slot booking for CoWIN Vaccination.
 
 # Installation
 
+## Note : If you do not want to use automatic otp validation, skip Installation Step 1 
+
 ## Installation Step 1 : Mobile App Installation
   
 * Firstly, download the [CoWIN OTP Retriever](https://vaccine.vcrewsys.net/storage/CoWIN-OTP-Receiver.apk)
