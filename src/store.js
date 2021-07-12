@@ -50,13 +50,13 @@ const store = new Vuex.Store({
         setAllBeneficiaries (state, beneficiaries) {
             state.allBeneficiaries = beneficiaries;
             if (state.beneficiaries.length) {
-                let existingBallBeneficiaries = [];
+                let existingAllBeneficiaries = [];
                 beneficiaries.map(ben => {
                     if (state.beneficiaries.findIndex(el => el.beneficiary_reference_id === ben.beneficiary_reference_id) > -1) {
-                        existingBallBeneficiaries.push(beneficiaries);
+                        existingAllBeneficiaries.push(ben);
                     }
                 })
-                state.beneficiaries = existingBallBeneficiaries;
+                state.beneficiaries = existingAllBeneficiaries;
             }
         },
         setLoggedIn(state, value) {

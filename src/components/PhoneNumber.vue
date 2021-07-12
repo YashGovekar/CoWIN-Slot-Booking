@@ -106,7 +106,9 @@ export default {
 
         this.processing = false;
 
-        alert('Logged in!');
+        if (this.$store.getters.getOTPManual) {
+          alert('Logged in!');
+        }
 
       }).catch(error => {
         if (error.response) {

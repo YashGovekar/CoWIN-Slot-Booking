@@ -265,6 +265,7 @@ export default {
               beneficiaries.push(ben.beneficiary_reference_id);
             }
           })
+          console.log(beneficiaries);
 
           if (session['available_capacity_dose' + dose] >= beneficiaries.length && session.min_age_limit === minAge) {
 
