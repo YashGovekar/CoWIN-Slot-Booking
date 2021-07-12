@@ -101,7 +101,7 @@ export default {
         this.axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
 
         this.axios.get(this.apiURL + '/appointment/beneficiaries').then(res => {
-          this.$store.commit('setBeneficiaries', res.data.beneficiaries)
+          this.$store.commit('setAllBeneficiaries', res.data.beneficiaries)
         });
 
         this.processing = false;

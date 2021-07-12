@@ -84,11 +84,11 @@ export default {
   mounted() {
     if (this.token) {
       this.axios.defaults.headers.common = {'Authorization': `Bearer ${this.token}`}
-      setTimeout(() => {
-        this.axios.get(this.apiURL + '/appointment/beneficiaries').then(res => {
-          this.$store.commit('setBeneficiaries', res.data.beneficiaries)
-        })
-      }, 500)
+      // setTimeout(() => {
+      //   this.axios.get(this.apiURL + '/appointment/beneficiaries').then(res => {
+      //     this.$store.commit('setAllBeneficiaries', res.data.beneficiaries)
+      //   })
+      // }, 500)
     }
     this.$store.commit('setConfirmed', false);
   },

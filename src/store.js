@@ -21,6 +21,7 @@ const store = new Vuex.Store({
         searchTomorrow: false,
         searchFreeOnly: false,
         beneficiaries: [],
+        allBeneficiaries: [],
         dose: 1,
         district: 0,
         stateId: 0,
@@ -45,6 +46,18 @@ const store = new Vuex.Store({
         },
         setBeneficiaries (state, beneficiaries) {
             state.beneficiaries = beneficiaries;
+        },
+        setAllBeneficiaries (state, beneficiaries) {
+            state.allBeneficiaries = beneficiaries;
+            if (state.beneficiaries.length) {
+                let existingBallBeneficiaries = [];
+                beneficiaries.map(ben => {
+                    if (state.beneficiaries.findIndex(el => el.beneficiary_reference_id === ben.beneficiary_reference_id) > -1) {
+                        existingBallBeneficiaries.push(beneficiaries);
+                    }
+                })
+                state.beneficiaries = existingBallBeneficiaries;
+            }
         },
         setLoggedIn(state, value) {
             state.loggedIn = value;
@@ -113,6 +126,7 @@ const store = new Vuex.Store({
         getToken: state => state.token ? state.token : null,
         getLoginStatus: state => state.loggedIn,
         getBeneficiaries: state => state.beneficiaries,
+        getAllBeneficiaries: state => state.allBeneficiaries,
         getDistrict: state => state.district,
         getStateId: state => state.stateId,
         getCenters: state => state.centers,

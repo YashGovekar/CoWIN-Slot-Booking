@@ -1,5 +1,14 @@
 <template>
-  <b-table :fields="fields" :items="$store.getters.getBeneficiaries">
+  <b-table :fields="fields" :items="$store.getters.getAllBeneficiaries">
+    <template #cell(select)="row">
+      <div class="form-group">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" :id="row.item.beneficiary_reference_id"
+                 @change="changeBeneficiaries($event.target.checked, row.item)">
+          <label class="custom-control-label" :for="row.item.beneficiary_reference_id"></label>
+        </div>
+      </div>
+    </template>
     <template #cell(appointments)="row">
       <b v-if="row.item['dose' + $store.getters.getDose + '_date'] !== ''" class="text-success">Vaccinated.</b>
       <b v-else-if="! row.value.length" class="text-danger">Appointment Not Booked!</b>
@@ -19,10 +28,31 @@ export default {
   data() {
     return {
       fields: [
-          'name', 'gender', 'appointments'
-      ]
+          'select', 'name', 'vaccine', 'gender', 'appointments'
+      ],
     }
   },
+  methods: {
+    changeBeneficiaries(isChecked, beneficiary)
+    {
+      let beneficiaries = this.$store.getters.getBeneficiaries;
+
+      if (isChecked) {
+        beneficiaries.push(beneficiary);
+      } else {
+        let index = beneficiaries.findIndex(el => el.beneficiary_reference_id === beneficiary.beneficiary_reference_id);
+        beneficiaries.splice(index, 1);
+      }
+      this.$store.commit('setBeneficiaries', beneficiaries);
+    }
+  },
+  mounted() {
+    let beneficiaries = this.$store.getters.getBeneficiaries;
+    console.log(beneficiaries);
+    if (beneficiaries) {
+      beneficiaries.map(el => document.getElementById(el.beneficiary_reference_id).checked = true)
+    }
+  }
 }
 </script>
 

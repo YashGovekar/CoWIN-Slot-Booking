@@ -277,10 +277,10 @@ export default {
                 for (let i = 0; i < allBeneficiaries.length; i++) {
                   let beneficiary = allBeneficiaries[i];
                   if (beneficiary.appointments.length > 0 && beneficiary['dose' + dose + '_date'] === '') {
+                    let index = beneficiaries.findIndex(el => el === beneficiary.beneficiary_reference_id)
+                    beneficiaries.splice(index, 1);
                     setTimeout(async () => {
                       await this.rescheduleAppointment(beneficiary);
-                      let index = beneficiaries.findIndex(el => el === beneficiary.beneficiary_reference_id)
-                      beneficiaries.splice(index, 1);
                     }, 500);
                   }
                 }
@@ -295,7 +295,7 @@ export default {
                 await this.bookAppointment();
                 setTimeout(() => {
                   this.axios.get(this.apiURL + '/appointment/beneficiaries').then(res => {
-                    this.$store.commit('setBeneficiaries', res.data.beneficiaries)
+                    this.$store.commit('setAllBeneficiaries', res.data.beneficiaries)
                   });
                 }, 1000)
               }
