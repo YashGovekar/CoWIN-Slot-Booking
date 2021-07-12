@@ -4,7 +4,7 @@ The Fastest automatic slot booking for CoWIN Vaccination.
 # Prerequisites
 
 * <a href="https://nodejs.org/en/download/" target="_blank">Node JS</a>
-* Android Device
+* Android Device (If opted for automatic OTP Validation)
 
 # Installation
 
