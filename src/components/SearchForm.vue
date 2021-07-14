@@ -158,8 +158,16 @@ export default {
 
               let pinCodeOnly = this.$store.getters.getPinCodeOnly;
 
+              let minAge = this.$store.getters.getMinAge;
+
+              if (minAge.includes(',')) {
+                minAge = minAge.split(',')[0];
+              }
+
+              minAge = Number(minAge);
+
               res.data.centers.map(center => center.sessions.map(session => {
-                if (session.min_age_limit === this.$store.getters.getMinAge) {
+                if (session.min_age_limit >= minAge) {
                   if (pinCodes.length) {
                     if (pinCodes.findIndex(pinCode => Number(center.pincode) === Number(pinCode)) > -1)  {
                       let newArray = centers.slice();
@@ -204,8 +212,24 @@ export default {
       await this.getCenters();
       let d = new Date();
       let currYear = d.getFullYear();
-      let minAge = Number(this.$store.getters.getMinAge);
+
+      let maxAge = '100';
+      let minAge = this.$store.getters.getMinAge;
+
+      if (minAge.includes(',')) {
+        let ageSplit = minAge.split(',');
+        minAge = ageSplit[0];
+        maxAge = ageSplit[1];
+      }
+
+      minAge = Number(minAge);
+      maxAge = Number(maxAge);
+
+
+      console.log(minAge, maxAge);
+
       let centers = this.$store.getters.getCenters;
+      console.log(centers);
 
       centers:
       for (let i = 0; i < centers.length; i++) {
@@ -261,7 +285,7 @@ export default {
 
           allBeneficiaries.map(ben => {
             let benAge = currYear - ben.birth_year;
-            if (ben['dose' + dose + '_date'] === '' && (benAge >= minAge && benAge < (minAge === 18 ? 45 : 75))) {
+            if (ben['dose' + dose + '_date'] === '' && benAge >= minAge && benAge < maxAge) {
               beneficiaries.push(ben.beneficiary_reference_id);
             }
           })

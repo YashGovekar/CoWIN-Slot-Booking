@@ -27,7 +27,7 @@ const store = new Vuex.Store({
         stateId: 0,
         pinCode: '',
         centers: [],
-        minAge: 0,
+        minAge: '0',
         confirmed: false,
         timeElapsed: 0,
         vaccine: '0',

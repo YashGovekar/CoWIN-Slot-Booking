@@ -50,9 +50,10 @@
 
       <div class="form-group mt-2">
         <label>Select Age <span class="text-danger">*</span> :</label>
-        <select class="form-select" id="minAge" @change="$store.commit('setMinAge', Number($event.target.value))">
+        <select class="form-select" id="minAge" @change="$store.commit('setMinAge', $event.target.value)">
           <option selected>Book for</option>
-          <option value="18">18+</option>
+          <option value="18">18 & Above</option>
+          <option value="18,44">18-44</option>
           <option value="45">45+</option>
         </select>
       </div>
