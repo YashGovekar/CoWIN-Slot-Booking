@@ -1,5 +1,27 @@
 <template>
   <div class="w-100">
+
+    <div class="form-group">
+      <label>State <span class="text-danger">*</span> </label>
+      <select @change="getDistricts($event.target.value)" class="form-select" id="state">
+        <option selected>Select a state</option>
+        <option v-for="state in states" :value="state.state_id" :key="state.state_id">
+          {{ state.state_name }}
+        </option>
+      </select>
+    </div>
+    <div class="mt-2">
+      <label class="text-left">District <span class="text-danger">*</span></label>
+      <select @change="setDistrict($event.target.value)" :model="district" class="form-select" id="district">
+        <option selected>Select a District</option>
+        <option v-for="district in districts" :value="district.district_id" :key="district.district_id">
+          {{ district.district_name }}
+        </option>
+      </select>
+    </div>
+
+    <hr />
+
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
@@ -27,7 +49,6 @@
     </div>
 
     <hr />
-
     <div class="form-group">
       <input class="form-control"
              :value="$store.getters.getCenterName"
@@ -40,27 +61,6 @@
              :checked="$store.getters.getCenterNameOnly"
              @change="$store.commit('setCenterNameOnly', $event.target.checked)">
       <label class="form-check-label" for="center-only"> Search By center name only? </label>
-    </div>
-
-    <hr />
-
-    <div class="form-group">
-      <label>State <span class="text-danger">*</span> </label>
-      <select @change="getDistricts($event.target.value)" class="form-select" id="state">
-        <option selected>Select a state</option>
-        <option v-for="state in states" :value="state.state_id" :key="state.state_id">
-          {{ state.state_name }}
-        </option>
-      </select>
-    </div>
-    <div class="mt-2">
-      <label class="text-left">District <span class="text-danger">*</span></label>
-      <select @change="setDistrict($event.target.value)" :model="district" class="form-select" id="district">
-        <option selected>Select a District</option>
-        <option v-for="district in districts" :value="district.district_id" :key="district.district_id">
-          {{ district.district_name }}
-        </option>
-      </select>
     </div>
     <button @click="toggleSearching" class="btn btn-success mt-2">
       <span v-if="!searching">
@@ -129,8 +129,15 @@ export default {
             + formatted_date.slice(5, 7) + '-'
             + formatted_date.slice(0, 4);
 
-        let randomString = new Date().getTime();
-        let url = this.apiURL + '/appointment/sessions/public/calendarByDistrict?district_id=' + district + '&date=' + date + '?_=' + randomString;
+        let randomString = (Math.random() * (1200 - 200) + 200).toFixed(0);
+
+        let url = null;
+        url = this.apiURL + '/appointment/sessions/public/calendarByDistrict?district_id=' + district + '&date=' + date + '?_=' +  randomString;
+
+        if (this.$store.getters.getPinCodeOnly && pinCode.length && ! pinCode.includes(',')) {
+          url = this.apiURL + '/appointment/sessions/public/calendarByPin?pincode=' + pinCode + '&date=' + date + '?_=' +  randomString;
+        }
+
         // if (pinCode.length >= 6) {
         //   if (pinCode.includes(',')) {
         //     let pinCodes = pinCode.split(',');
@@ -213,23 +220,16 @@ export default {
       let d = new Date();
       let currYear = d.getFullYear();
 
-      let maxAge = '100';
       let minAge = this.$store.getters.getMinAge;
 
       if (minAge.includes(',')) {
         let ageSplit = minAge.split(',');
         minAge = ageSplit[0];
-        maxAge = ageSplit[1];
       }
 
       minAge = Number(minAge);
-      maxAge = Number(maxAge);
-
-
-      console.log(minAge, maxAge);
 
       let centers = this.$store.getters.getCenters;
-      console.log(centers);
 
       centers:
       for (let i = 0; i < centers.length; i++) {
@@ -257,6 +257,7 @@ export default {
           }
 
           if (this.$store.getters.getSearchTomorrow) {
+            console.log(this.tomorrowDate, session.date)
             if (session.date !== this.tomorrowDate) {
               continue;
             }
@@ -267,6 +268,7 @@ export default {
               continue;
             }
           }
+          console.log(center.name);
 
           let vaccine = this.$store.getters.getVaccine;
           if (vaccine !== '0') {
@@ -274,8 +276,6 @@ export default {
               continue;
             }
           }
-
-          console.log(center.name, session.date);
 
           let allBeneficiaries = this.$store.getters.getBeneficiaries;
 
@@ -285,11 +285,10 @@ export default {
 
           allBeneficiaries.map(ben => {
             let benAge = currYear - ben.birth_year;
-            if (ben['dose' + dose + '_date'] === '' && benAge >= minAge && benAge < maxAge) {
+            if (ben['dose' + dose + '_date'] === '' && benAge >= minAge) {
               beneficiaries.push(ben.beneficiary_reference_id);
             }
           })
-          console.log(beneficiaries);
 
           if (session['available_capacity_dose' + dose] >= beneficiaries.length && session.min_age_limit === minAge) {
 
@@ -380,7 +379,8 @@ export default {
         + formatted_date.slice(5, 7) + '-'
         + formatted_date.slice(0, 4);
 
-    this.tomorrowDate = (Number(formatted_date.slice(8, 10)) + 1) + '-'
+    let tomorrowDateString = (Number(formatted_date.slice(8, 10)) + 1).toString();
+    this.tomorrowDate = (tomorrowDateString.length === 1 ? '0' + tomorrowDateString : tomorrowDateString) + '-'
         + formatted_date.slice(5, 7) + '-'
         + formatted_date.slice(0, 4);
 
