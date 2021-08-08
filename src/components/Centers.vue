@@ -1,6 +1,6 @@
 <template>
   <div style="height: 20em; overflow-y: scroll">
-    <b-table :fields="fields" :items="$store.getters.getCenters">
+    <b-table :fields="fields" :items="centers">
       <template #cell(sessions)="row">
         <table class="table table-bordered">
           <thead>
@@ -31,12 +31,14 @@ export default {
   components: {
     BTable,
   },
+  props: {
+    centers: Array,
+  },
   data() {
     return {
       fields: [
         'name', 'pincode', 'sessions',
       ],
-      centers: [],
     }
   },
 }

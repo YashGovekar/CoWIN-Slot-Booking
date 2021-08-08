@@ -1,4 +1,8 @@
 <template>
+  <b-row>
+  <b-col cols="6">
+    <div class="card mt-5">
+      <div class="card-body">
   <div class="w-100">
 
     <div class="form-group">
@@ -71,11 +75,27 @@
       </span>
     </button>
   </div>
+      </div>
+    </div>
+  </b-col>
+  <b-col cols="6">
+    <div class="card mt-5">
+      <div class="card-body">
+        <centers :centers="selectedCenters" />
+      </div>
+    </div>
+  </b-col>
+  </b-row>
 </template>
 
 <script>
+import Centers from "./Centers";
+
 export default {
   name: "SearchForm",
+  components: {
+    Centers,
+  },
   data() {
     return {
       pin_code: '',
@@ -93,6 +113,7 @@ export default {
       processed: false,
       date: '',
       tomorrowDate: '',
+      selectedCenters: [],
     }
   },
   methods: {
@@ -233,6 +254,8 @@ export default {
 
       centers:
       for (let i = 0; i < centers.length; i++) {
+        this.selectedCenters = [];
+
         if (this.processed) {
           break;
         }
@@ -276,6 +299,8 @@ export default {
               continue;
             }
           }
+
+          this.selectedCenters.push(center);
 
           let allBeneficiaries = this.$store.getters.getBeneficiaries;
 

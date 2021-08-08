@@ -33,20 +33,7 @@
             </div>
           </div>
         </b-col>
-        <b-col cols="6">
-          <div class="card mt-5">
-            <div class="card-body">
-              <search-form />
-            </div>
-          </div>
-        </b-col>
-        <b-col cols="6">
-          <div class="card mt-5">
-            <div class="card-body">
-              <centers />
-            </div>
-          </div>
-        </b-col>
+        <search-form />
       </b-row>
     </div>
 
@@ -59,7 +46,6 @@ import PhoneNumber from "@/components/PhoneNumber";
 import {BCol, BRow} from "bootstrap-vue";
 import Beneficiaries from "@/components/Beneficiaries";
 import SearchForm from "@/components/SearchForm";
-import Centers from "@/components/Centers";
 import Options from "@/components/Options";
 
 export default {
@@ -71,7 +57,6 @@ export default {
     BRow,
     Beneficiaries,
     SearchForm,
-    Centers,
   },
   computed: {
     token() {
