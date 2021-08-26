@@ -10,7 +10,9 @@
       </div>
     </template>
     <template #cell(appointments)="row">
-      <b v-if="row.item['dose' + $store.getters.getDose + '_date'] !== ''" class="text-success">Vaccinated.</b>
+      <b v-if="row.item['dose' + $store.getters.getDose + '_date'] !== ''" class="text-success">
+         <span v-if="row.item['dose1_date'] !== ''">Partially </span><span v-else>Fully </span>Vaccinated
+      </b>
       <b v-else-if="! row.value.length" class="text-danger">Appointment Not Booked!</b>
       <b v-else class="text-success">Appointment Booked!</b>
     </template>
@@ -28,7 +30,7 @@ export default {
   data() {
     return {
       fields: [
-          'select', 'name', 'vaccine', 'gender', 'appointments'
+          'select', 'name', 'vaccine', 'dose', 'appointments'
       ],
     }
   },
