@@ -10,11 +10,23 @@
       </div>
     </template>
     <template #cell(appointments)="row">
-      <b v-if="row.item['dose' + $store.getters.getDose + '_date'] !== ''" class="text-success">
-         <span v-if="row.item['dose1_date'] !== ''">Partially </span><span v-else>Fully </span>Vaccinated
+      <b v-if="row.item['dose2_date'] !== ''" class="text-success">
+        Fully Vaccinated
+      </b>
+      <b v-else-if="row.item['dose1_date'] !== ''" class="text-success">
+        Partially Vaccinated
       </b>
       <b v-else-if="! row.value.length" class="text-danger">Appointment Not Booked!</b>
-      <b v-else class="text-success">Appointment Booked!</b>
+      <b v-else class="text-success">
+        Appointment Booked!<br>
+        <a href="#" @click="downloadAppointmentSlip(row.item.appointments[row.item.appointments.length - 1].appointment_id)">Appointment Slip</a>
+        <br>
+        <a href="#" class="text-danger"
+           @click="cancelAppointment(row.item.appointments[row.item.appointments.length - 1].appointment_id, row.item.beneficiary_reference_id)"
+        >
+          Cancel Appointment
+        </a>
+      </b>
     </template>
   </b-table>
 </template>
@@ -46,6 +58,34 @@ export default {
         beneficiaries.splice(index, 1);
       }
       this.$store.commit('setBeneficiaries', beneficiaries);
+    },
+    downloadAppointmentSlip(appointment_id)
+    {
+      this.axios.get(this.apiURL + '/appointment/appointmentslip/download?appointment_id=' + appointment_id, {
+        responseType:"blob"
+      })
+      .then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data], {type: "application/pdf"}));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'Appointment_slip.pdf'); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+      })
+    },
+    cancelAppointment(appointment_id, beneficiary_id)
+    {
+      console.log(appointment_id, beneficiary_id)
+      this.axios.post(this.apiURL + '/appointment/cancel', {
+        appointment_id: appointment_id,
+        beneficiariesToCancel: [
+          beneficiary_id,
+        ]
+      }).then(() => {
+        this.axios.get(this.apiURL + '/appointment/beneficiaries').then(res => {
+          this.$store.commit('setAllBeneficiaries', res.data.beneficiaries)
+        });
+      })
     }
   },
   mounted() {
