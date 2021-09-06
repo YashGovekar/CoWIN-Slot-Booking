@@ -1,5 +1,6 @@
-# CoWIN-Slot-Booking
+# CoWIN Slot Booking
 The Fastest automatic slot booking for CoWIN Vaccination.
+This application consists of User Interface for easy management of options.
 
 # Prerequisites
 
