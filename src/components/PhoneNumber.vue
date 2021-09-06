@@ -142,7 +142,7 @@ export default {
     }
 
     setInterval(() => {
-      if (this.computedTimeElapsed > 900) {
+      if (this.computedTimeElapsed > 800) {
         this.$store.commit('setTimeElapsed', 0);
         this.$store.commit('setLoggedIn', false);
         this.$store.commit('setToken', null);

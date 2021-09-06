@@ -17,7 +17,7 @@
         Partially Vaccinated
       </b>
       <b v-else-if="! row.value.length" class="text-danger">Appointment Not Booked!</b>
-      <b v-else class="text-success">
+      <b v-if="row.item['dose2_date'] !== '' || row.item['dose1_date'] !== ''" class="text-success">
         Appointment Booked!<br>
         <a href="#" @click="downloadAppointmentSlip(row.item.appointments[row.item.appointments.length - 1].appointment_id)">Appointment Slip</a>
         <br>
@@ -75,7 +75,9 @@ export default {
     },
     cancelAppointment(appointment_id, beneficiary_id)
     {
-      console.log(appointment_id, beneficiary_id)
+      if (! confirm('Are you sure you want to cancel appointments?')) {
+        return;
+      }
       this.axios.post(this.apiURL + '/appointment/cancel', {
         appointment_id: appointment_id,
         beneficiariesToCancel: [
