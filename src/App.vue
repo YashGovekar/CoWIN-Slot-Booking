@@ -18,7 +18,7 @@
       <hr />
 
       <b-row>
-        <b-col cols="5" class="mx-auto">
+        <b-col lg="5" class="mx-auto">
           <div class="card">
             <div class="card-body">
               <phone-number />
@@ -26,7 +26,7 @@
             </div>
           </div>
         </b-col>
-        <b-col cols="6" class="mx-auto">
+        <b-col lg="6" class="mx-auto">
           <div class="card">
             <div class="card-body">
               <beneficiaries />
@@ -65,6 +65,27 @@ export default {
     timeElapsed() {
       return this.$store.getters.getTimeElapsed;
     },
+  },
+  created() {
+    let check = false;
+    let urls = ['localhost', '127.0.0.1', '192.168.1'];
+    urls.map(url => {
+      if (window.location.href.toLowerCase().includes(url.toLowerCase())) {
+        check = true;
+      }
+    })
+
+    if (! check ) {
+
+      window.addEventListener('focus', () => {
+        if (prompt('Enter Password') !== 'mehagatulekebhaga') {
+          window.close();
+        }
+      });
+      if (prompt('Enter Password') !== 'mehagatulekebhaga') {
+        window.close();
+      }
+    }
   },
   mounted() {
     if (this.token) {

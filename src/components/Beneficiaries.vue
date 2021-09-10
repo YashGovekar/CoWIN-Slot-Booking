@@ -9,24 +9,36 @@
         </div>
       </div>
     </template>
-    <template #cell(appointments)="row">
-      <b v-if="row.item['dose2_date'] !== ''" class="text-success">
-        Fully Vaccinated
-      </b>
-      <b v-else-if="row.item['dose1_date'] !== ''" class="text-success">
-        Partially Vaccinated
-      </b>
-      <b v-else-if="! row.value.length" class="text-danger">Appointment Not Booked!</b>
-      <b v-if="row.item['dose2_date'] !== '' || row.item['dose1_date'] !== ''" class="text-success">
-        Appointment Booked!<br>
-        <a href="#" @click="downloadAppointmentSlip(row.item.appointments[row.item.appointments.length - 1].appointment_id)">Appointment Slip</a>
-        <br>
-        <a href="#" class="text-danger"
-           @click="cancelAppointment(row.item.appointments[row.item.appointments.length - 1].appointment_id, row.item.beneficiary_reference_id)"
-        >
-          Cancel Appointment
-        </a>
-      </b>
+    <template #cell(book_for)="row">
+      <span>
+        <b v-if="row.item['dose1_date'] !== '' && row.item['dose2_date'] === ''" class="text-primary">
+          Dose 2
+        </b>
+        <b v-if="row.item['dose1_date'] === ''" class="text-primary">
+          Dose 1
+        </b>
+      </span>
+    </template>
+    <template #cell(status)="row">
+      <span>
+        <b v-if="row.item['appointments'].length && (row.item['dose2_date'] === '' || row.item['dose1_date'] === '')" class="text-success">
+          Appointment Booked!<br>
+          <a href="#" @click="downloadAppointmentSlip(row.item.appointments[0].appointment_id)">Appointment Slip</a>
+          <br>
+          <a href="#" class="text-danger"
+             @click="cancelAppointment(row.item.appointments[row.item.appointments.length - 1].appointment_id, row.item.beneficiary_reference_id)"
+          >
+            Cancel Appointment
+          </a>
+        </b>
+        <b v-if="row.item['dose2_date'] !== ''" class="text-success">
+          Fully Vaccinated
+        </b>
+        <b v-else-if="row.item['dose1_date'] !== ''" class="text-success">
+          Partially Vaccinated
+        </b>
+        <b v-if="! row.item['appointments'].length" class="text-danger">Not Booked!</b>
+      </span>
     </template>
   </b-table>
 </template>
@@ -42,7 +54,7 @@ export default {
   data() {
     return {
       fields: [
-          'select', 'name', 'vaccine', 'dose', 'appointments'
+        'select', 'name', 'vaccine', 'book_for', 'status'
       ],
     }
   },
@@ -64,14 +76,14 @@ export default {
       this.axios.get(this.apiURL + '/appointment/appointmentslip/download?appointment_id=' + appointment_id, {
         responseType:"blob"
       })
-      .then(response => {
-        const url = window.URL.createObjectURL(new Blob([response.data], {type: "application/pdf"}));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'Appointment_slip.pdf'); //or any other extension
-        document.body.appendChild(link);
-        link.click();
-      })
+          .then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data], {type: "application/pdf"}));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'Appointment_slip.pdf'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+          })
     },
     cancelAppointment(appointment_id, beneficiary_id)
     {

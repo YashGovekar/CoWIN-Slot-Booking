@@ -1,6 +1,6 @@
 <template>
   <b-row>
-  <b-col cols="6">
+  <b-col lg="6">
     <div class="card mt-5">
       <div class="card-body">
   <div class="w-100">
@@ -27,9 +27,9 @@
     <hr />
 
     <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <div class="m-2 form-check">
+      <div class="col-lg-6">
+        <div class="m-2 form-group">
+          <div class="form-check">
             <input type="checkbox" class="form-check-input" value="true" id="pinCodeOnly"
                    :checked="$store.getters.getPinCodeOnly"
                    @change="$store.commit('setPinCodeOnly', $event.target.checked)">
@@ -41,9 +41,9 @@
                  placeholder="Enter Pin code" />
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="m-2 form-check">
-          <label class="form-check-label" for="dose"> Which Dose? </label>
+      <div class="col-lg-6">
+        <div class="mt-2 form-group">
+          <label class="text-left" for="dose"> Which Dose? </label>
           <select class="form-select" id="dose" @change="$store.commit('setDose', $event.target.value)">
             <option value="1">Dose 1</option>
             <option value="2">Dose 2</option>
@@ -78,7 +78,7 @@
       </div>
     </div>
   </b-col>
-  <b-col cols="6">
+  <b-col lg="6">
     <div class="card mt-5">
       <div class="card-body">
         <centers :centers="selectedCenters" />
