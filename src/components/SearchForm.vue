@@ -321,6 +321,8 @@ export default {
 
             this.appointment.slot = session['slots'][0]
 
+            this.appointment.dose = dose
+
             if (allBeneficiaries.length) {
               if (this.$store.getters.getReschedule) {
                 for (let i = 0; i < allBeneficiaries.length; i++) {
