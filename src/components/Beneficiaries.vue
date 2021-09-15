@@ -3,7 +3,7 @@
     <template #cell(select)="row">
       <div class="form-group">
         <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" :id="row.item.beneficiary_reference_id"
+          <input type="checkbox" class="custom-control-input beneficiaries" :id="row.item.beneficiary_reference_id"
                  @change="changeBeneficiaries($event.target.checked, row.item)">
           <label class="custom-control-label" :for="row.item.beneficiary_reference_id"></label>
         </div>
@@ -103,11 +103,7 @@ export default {
     }
   },
   mounted() {
-    let beneficiaries = this.$store.getters.getBeneficiaries;
-    console.log(beneficiaries);
-    if (beneficiaries) {
-      beneficiaries.map(el => document.getElementById(el.beneficiary_reference_id).checked = true)
-    }
+    this.$store.commit('setBeneficiaries', [])
   }
 }
 </script>

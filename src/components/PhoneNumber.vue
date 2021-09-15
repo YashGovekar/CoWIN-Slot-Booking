@@ -103,13 +103,15 @@ export default {
         this.axios.get(this.apiURL + '/appointment/beneficiaries').then(res => {
           this.$store.commit('setAllBeneficiaries', res.data.beneficiaries)
         });
-
         this.processing = false;
+
+        Array.from(document.getElementsByClassName('beneficiaries'))
+            .map(el => el.checked = false)
+        this.$store.commit('setBeneficiaries', [])
 
         if (this.$store.getters.getOTPManual) {
           alert('Logged in!');
         }
-
       }).catch(error => {
         if (error.response) {
           if (! this.$store.getters.getOTPManual) {

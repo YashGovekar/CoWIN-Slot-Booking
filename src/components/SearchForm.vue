@@ -103,7 +103,7 @@ export default {
       states: [],
       districts: [],
       appointment: {
-        "dose": 1,
+        "dose": this.$store.getters.getDose,
         "session_id": "",
         "slot": "",
         "beneficiaries": []
@@ -409,7 +409,7 @@ export default {
         + formatted_date.slice(5, 7) + '-'
         + formatted_date.slice(0, 4);
 
-    document.getElementById('dose').value = this.appointment.dose = this.$store.getters.getDose;
+    document.getElementById('dose').value = this.$store.getters.getDose;
   }
 }
 </script>
